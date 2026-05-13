@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control LED RGB — ESP32-S2</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="chip-label">ESP32-S2</div>
+            <h1>Control LED RGB</h1>
+            <p class="subtitle">Laboratorio 2 — Sistemas Embebidos</p>
+        </header>
+
+        <div class="led-preview-wrap">
+            <div class="led-preview" id="ledPreview"></div>
+            <div class="led-status" id="ledStatus">Cargando...</div>
+        </div>
+
+        <div class="controls">
+            <div class="slider-group">
+                <label>
+                    <span class="channel r">R</span>
+                    <span class="value-display" id="valR">0</span>
+                </label>
+                <input type="range" min="0" max="255" value="0" id="sliderR" class="slider red">
+            </div>
+
+            <div class="slider-group">
+                <label>
+                    <span class="channel g">G</span>
+                    <span class="value-display" id="valG">0</span>
+                </label>
+                <input type="range" min="0" max="255" value="0" id="sliderG" class="slider green">
+            </div>
+
+            <div class="slider-group">
+                <label>
+                    <span class="channel b">B</span>
+                    <span class="value-display" id="valB">0</span>
+                </label>
+                <input type="range" min="0" max="255" value="0" id="sliderB" class="slider blue">
+            </div>
+        </div>
+
+        <div class="actions">
+            <button id="btnApply" onclick="applyColor()">Aplicar color</button>
+            <button id="btnOff" onclick="turnOff()">Apagar LED</button>
+        </div>
+
+        <div class="feedback" id="feedback"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,193 @@
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Outfit:wght@300;500;700&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+    --bg: #0e0e12;
+    --panel: #16161e;
+    --border: #2a2a38;
+    --text: #e8e8f0;
+    --muted: #6b6b80;
+    --accent: #4f8cff;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+}
+
+.container {
+    width: 100%;
+    max-width: 420px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+}
+
+/* Header */
+header { text-align: center; }
+
+.chip-label {
+    display: inline-block;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    padding: 2px 8px;
+    margin-bottom: 0.6rem;
+    opacity: 0.8;
+}
+
+h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.subtitle {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 0.25rem;
+}
+
+/* LED preview */
+.led-preview-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.led-preview {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #000;
+    border: 2px solid var(--border);
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.led-status {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+}
+
+/* Sliders */
+.controls { display: flex; flex-direction: column; gap: 1.1rem; }
+
+.slider-group { display: flex; flex-direction: column; gap: 0.4rem; }
+
+.slider-group label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+}
+
+.channel {
+    font-family: 'Share Tech Mono', monospace;
+    font-weight: bold;
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+}
+.channel.r { color: #ff5566; }
+.channel.g { color: #44dd88; }
+.channel.b { color: #4499ff; }
+
+.value-display {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--muted);
+    min-width: 2.5rem;
+    text-align: right;
+}
+
+.slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    outline: none;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+.slider:hover { opacity: 0.9; }
+
+.slider.red   { background: linear-gradient(to right, #2a1015, #ff5566); }
+.slider.green { background: linear-gradient(to right, #0d2018, #44dd88); }
+.slider.blue  { background: linear-gradient(to right, #0d1525, #4499ff); }
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--text);
+    border: 2px solid var(--bg);
+    cursor: pointer;
+    box-shadow: 0 0 6px rgba(0,0,0,0.5);
+}
+.slider::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--text);
+    border: 2px solid var(--bg);
+    cursor: pointer;
+}
+
+/* Buttons */
+.actions { display: flex; gap: 0.75rem; }
+
+button {
+    flex: 1;
+    padding: 0.7rem 1rem;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+}
+button:active { transform: scale(0.97); }
+
+#btnApply {
+    background: var(--accent);
+    color: #fff;
+}
+#btnApply:hover { opacity: 0.85; }
+
+#btnOff {
+    background: var(--border);
+    color: var(--muted);
+}
+#btnOff:hover { opacity: 0.75; }
+
+/* Feedback */
+.feedback {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.75rem;
+    text-align: center;
+    color: var(--muted);
+    min-height: 1.2em;
+    transition: color 0.3s;
+}
+.feedback.ok  { color: #44dd88; }
+.feedback.err { color: #ff5566; }
