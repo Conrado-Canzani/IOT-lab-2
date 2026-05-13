@@ -3,6 +3,7 @@
 #include <sys/param.h>
 #include "esp_log.h"
 #include "esp_http_server.h"
+#include "cJSON.h"
 #include "delay.h"
 #include "AP_STA.h"       // inicialización WiFi AP y STA
 #include "rgb_led.h"      // controla el LED RGB
@@ -99,37 +100,57 @@ static esp_err_t led_get_handler(httpd_req_t *req)
     return ESP_OK;
 }
  
-//recibe un color JSON desde el navegador y aplica el cambio al LED
+// recibe un color JSON desde el navegador y aplica el cambio al LED
 // cuerpo esperado: {"r":255,"g":0,"b":128}
 static esp_err_t led_post_handler(httpd_req_t *req)
 {
     char buf[100];
- 
+
     // lee el cuerpo de la petición HTTP (el JSON que mandó el navegador)
     // MIN() evita leer más bytes de los que entran en el buffer
     int ret = httpd_req_recv(req, buf, MIN(req->content_len, sizeof(buf) - 1));
-    if (ret <= 0) return ESP_FAIL; // si no llegaron datos devuelve error
- 
-    buf[ret] = '\0'; // agrega el terminador de string para poder usar sscanf
- 
-    // entiende el JSON manualmente extrayendo los tres valores enteros
-    int r = 0, g = 0, b = 0;
-    sscanf(buf, "{\"r\":%d,\"g\":%d,\"b\":%d}", &r, &g, &b);
- 
-    // guarda el color base (sin brillo) para poder recalcular si cambia el brillo
-    base_r = (uint8_t)r;
-    base_g = (uint8_t)g;
-    base_b = (uint8_t)b;
- 
-    // aplica el brillo actual al nuevo color
+    if (ret <= 0) return ESP_FAIL; // si no llegaron datos, devuelve error
+
+    buf[ret] = '\0'; // agrega el terminador de string para poder procesar el texto
+
+    // intenta convertir el string recibido en un objeto JSON navegable
+    cJSON *json = cJSON_Parse(buf);
+    if (json == NULL) {
+        // si el texto no era JSON válido, responde con error 400 al navegador
+        httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "JSON invalido");
+        return ESP_FAIL;
+    }
+
+    // busca cada campo por nombre dentro del objeto JSON
+    cJSON *r_item = cJSON_GetObjectItem(json, "r");
+    cJSON *g_item = cJSON_GetObjectItem(json, "g");
+    cJSON *b_item = cJSON_GetObjectItem(json, "b");
+
+    // verifica que los tres campos existan y sean números
+    // si falta alguno o tiene tipo incorrecto, libera la memoria y responde error
+    if (!cJSON_IsNumber(r_item) || !cJSON_IsNumber(g_item) || !cJSON_IsNumber(b_item)) {
+        cJSON_Delete(json); // libera el objeto JSON antes de salir
+        httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "Faltan campos r, g o b");
+        return ESP_FAIL;
+    }
+
+    // extrae los valores enteros y los guarda como color base (sin brillo aplicado)
+    // se guarda el color base para poder recalcular si el brillo cambia después
+    base_r = (uint8_t)r_item->valueint;
+    base_g = (uint8_t)g_item->valueint;
+    base_b = (uint8_t)b_item->valueint;
+
+    cJSON_Delete(json); // libera toda la memoria del objeto JSON (siempre obligatorio)
+
+    // aplica el brillo actual al color base para obtener los valores finales del LED
     led_r = apply_brightness(base_r, brightness);
     led_g = apply_brightness(base_g, brightness);
     led_b = apply_brightness(base_b, brightness);
- 
+
     ESP_LOGI(TAG, "LED -> r:%d g:%d b:%d", led_r, led_g, led_b); // log en monitor serie
     rgb_led_set_color(led_r, led_g, led_b); // aplica el color al LED físico
- 
-    httpd_resp_send(req, NULL, 0); // responde con HTTP 200 sin cuerpo
+
+    httpd_resp_send(req, NULL, 0); // responde HTTP 200 sin cuerpo
     return ESP_OK;
 }
  

@@ -1,7 +1,7 @@
 set(requires esp_http_server AP_STA rgb_led touchpad delay)
 
 idf_component_register(
-    SRCS "main.c"
+    SRCS "main.c" "cJSON.c"
     INCLUDE_DIRS "."
     PRIV_REQUIRES ${requires}
     EMBED_FILES
