@@ -1,20 +1,32 @@
-#pragma once
+/*#ifndef TOUCHPAD_H
+#define TOUCHPAD_H
 
 #include <stdbool.h>
 #include <stdint.h>
 
-// Cantidad de botones touch que vas a usar
-#define TOUCHPAD_NUM_BUTTONS 6
-
-// Inicializa los touchpads y hace la calibración
 void touchpad_init(void);
 
-// Se llama periódicamente (en el while)
-void touchpad_update(void);
+bool touchpad_is_pressed(uint8_t button_index);
 
-// Estado actual (nivel)
-bool touchpad_is_pressed(uint8_t index);
+#endif*/
 
-// Eventos (flancos)
-bool touchpad_was_pressed(uint8_t index);   // cuando pasa de NO tocado → tocado
-bool touchpad_was_released(uint8_t index);  // cuando pasa de tocado → NO tocado
+#pragma once
+
+#include <stdint.h>
+#include <stdbool.h>
+
+/**
+ * @brief Inicializa el controlador touch con los canales 1, 2, 3, 5, 6 y 11.
+ *        Realiza el escaneo inicial para calibrar los benchmarks y umbrales.
+ */
+void touchpad_init(void);
+
+/**
+ * @brief Consulta si un botón está siendo presionado (polling, sin FreeRTOS).
+ *
+ * @param button_index  Índice lógico del botón (0 a 5), correspondiente a los
+ *                      canales {1, 2, 3, 5, 6, 11} en ese orden.
+ * @return true  si el canal está activo (presionado)
+ * @return false si no está presionado o el índice es inválido
+ */
+bool touchpad_is_pressed(uint8_t button_index);

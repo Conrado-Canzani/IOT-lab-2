@@ -1,18 +1,9 @@
 {
-  "C_Cpp.intelliSenseEngine": "default",
-  "idf.openOcdConfigs": [
-    "board/esp32s2-kaluga-1.cfg"
-  ],
   "idf.currentSetup": "C:\\esp\\v6.0\\esp-idf",
-  "idf.customExtraVars": {
-    "IDF_TARGET": "esp32s2"
-  },
-  "clangd.path": "C:\\Espressif\\tools\\esp-clang\\esp-20.1.1_20250829\\esp-clang\\bin\\clangd.exe",
-  "clangd.arguments": [
-    "--background-index",
-    "--query-driver=**",
-    "--compile-commands-dir=c:\\Users\\Usuario\\Desktop\\Universidad\\Sist. Emb\\Laboratorio_2a\\build"
-  ],
+  "idf.portWin": "COM16",
   "idf.flashType": "UART",
-  "idf.portWin": "COM16"
+  "idf.customExtraVars": {
+    "OPENOCD_SCRIPTS": "C:\\Users\\Usuario\\.espressif\\tools\\openocd-esp32\\v0.12.0-esp32-20230921/openocd-esp32/share/openocd/scripts",
+    "IDF_CCACHE_ENABLE": "1"
+  }
 }
